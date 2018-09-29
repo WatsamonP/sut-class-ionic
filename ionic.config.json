@@ -1,0 +1,7 @@
+{
+  "name": "SUT-class-ionic",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
