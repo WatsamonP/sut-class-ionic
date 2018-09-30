@@ -1,10 +1,10 @@
-import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, AlertController, reorderArray } from 'ionic-angular';
 import { PopoverController } from 'ionic-angular';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthServiceProvider } from '../../services/auth.service';
-import { Course } from '../../services/course.model';
+//import { Course } from '../../services/course.model';
 import { AttendancePage } from '../../pages/attendance/attendance';
 import { QuizPage } from '../../pages/quiz/quiz';
 import { LoginPage } from '../login/login';
@@ -32,7 +32,6 @@ export class HomePage {
     private auth: AuthServiceProvider,
     private db: AngularFireDatabase,
     public alertCtrl: AlertController,
-    private attendance: AttendanceService,
     public popoverCtrl: PopoverController) {
 
     //this.doRefresh(0);

@@ -1,14 +1,12 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Platform, MenuController, ModalController } from 'ionic-angular';
+import { NavController, NavParams, Platform, MenuController, ModalController } from 'ionic-angular';
 //import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthServiceProvider } from '../../services/auth.service';
 import { AlertController } from 'ionic-angular';
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
-import { Student } from '../../services/student.model';
 import { Course } from '../../services/course.model';
 import moment from 'moment';
-import { HomePage } from '../home/home';
 //import { Toast } from '@ionic-native/toast';
 import { ToastController } from 'ionic-angular';
 import { ScanModalPage } from './scan-modal/scan-modal';

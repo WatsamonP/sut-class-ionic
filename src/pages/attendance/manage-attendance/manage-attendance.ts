@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import moment from 'moment';
 import { AttendanceService } from '../../../services/attendance.service'
 import 'rxjs/add/operator/map'

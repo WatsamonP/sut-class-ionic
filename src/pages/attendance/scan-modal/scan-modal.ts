@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { BarcodeScanner } from "@ionic-native/barcode-scanner";
 import { AttendancePage } from '../../attendance/attendance';
 import { AttendanceService } from '../../../services/attendance.service'
-import { AngularFireAuth } from 'angularfire2/auth';
+//import { AngularFireAuth } from 'angularfire2/auth';
 import { AuthServiceProvider } from '../../../services/auth.service';
 import { AngularFireDatabase } from 'angularfire2/database';
 import moment from 'moment';
@@ -34,7 +34,7 @@ export class ScanModalPage {
     public navParams: NavParams,
     private barcodeScanner: BarcodeScanner,
     public viewCtrl: ViewController,
-    //private attendance: AttendanceService,
+    private attendance: AttendanceService,
     public alertCtrl: AlertController,
     private auth: AuthServiceProvider,
     private db: AngularFireDatabase) {

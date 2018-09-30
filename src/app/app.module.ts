@@ -4,8 +4,6 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
-//import { PopoverPage } from '../pages/home/popover/popover';
-import { ListPage } from '../pages/list/list';
 import { LoginPage } from '../pages/login/login';
 import { AttendancePage } from '../pages/attendance/attendance';
 import { QuizPage } from '../pages/quiz/quiz';
@@ -40,7 +38,6 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
   declarations: [
     MyApp,
     HomePage,
-    //PopoverPage,
     LoginPage,
     AttendancePage,
     QuizPage,
@@ -50,7 +47,6 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
     AboutMePage,
     ScanModalPage,
     ManageAttendancePage,
-    //
     ExpandableComponent
   ],
   imports: [
@@ -64,7 +60,6 @@ import { BarcodeScanner } from '@ionic-native/barcode-scanner';
   entryComponents: [
     MyApp,
     HomePage,
-    //PopoverPage,
     LoginPage,
     AttendancePage,
     QuizPage,
