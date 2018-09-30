@@ -28,6 +28,7 @@
     "@ionic/storage": "2.2.0",
     "angularfire2": "^5.0.2",
     "bootstrap": "^4.1.3",
+    "cordova-plugin-ionic": "^5.2.4",
     "firebase": "^5.5.2",
     "ionic-angular": "3.9.2",
     "ionicons": "^4.4.4",
@@ -49,7 +50,12 @@
   },
   "cordova": {
     "plugins": {
-      "phonegap-plugin-barcodescanner": {}
+      "phonegap-plugin-barcodescanner": {},
+      "cordova-plugin-ionic": {
+        "APP_ID": "52a07ecb",
+        "CHANNEL_NAME": "Master",
+        "UPDATE_METHOD": "background"
+      }
     }
   }
 }
