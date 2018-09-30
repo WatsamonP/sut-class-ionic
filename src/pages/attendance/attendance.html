@@ -1,0 +1,456 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      ATTENDANCE
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<!--[ngStyle]="{'background-image': 'url(' + 'assets/imgs/course/0.png' + ')'};"-->
+<ion-content class="bg">
+
+
+  <!--ion-card-->
+  <ion-item [ngStyle]="{
+        'background': 'linear-gradient(0deg, rgba(255, 255, 255, 0.7), 
+                      rgba(255, 255, 255, 0.7)), 
+                      url(assets/imgs/course/'+this.pic+'.png) center center / cover no-repeat'}">
+    <div>
+      <p ion-text text-center style="font-size:30px; text-shadow: 2px 2px #ffffff;" color="dark"><b>{{course_id}}</b></p>
+      <p ion-text style="font-size:16px;" color="dark" style="text-shadow: 1px 1px #ffffff;">
+        <ion-icon name="school"></ion-icon>&nbsp;
+        <b>{{course_name}}</b>
+      </p>
+      <p ion-text style="font-size:14px;" color="dark" ion-text>
+        <ion-icon name="people"></ion-icon>&nbsp;
+        จำนวนนักศึกษา {{studentCount}}
+      </p>
+    </div>
+
+    <!--button ion-button block (click)="onClick_Create()">
+      <div>CREATE NEW ATTENDANCE</div>
+    </button-->
+    <div style="padding:3px"></div>                                  
+    <button type="button" (click)="onClick_Create()" class="btn btn-primary btn-lg btn-block" style="font-size:15px;height:42px">
+      <ion-icon name="create"></ion-icon>&nbsp;
+      NEW ATTENDANCE
+    </button>
+  </ion-item>
+
+
+
+  <!--///////////////////////////////////////////////////////////////////-->
+
+
+
+  <ion-list *ngIf="isToggled==false">
+    <ion-item style="padding-top: 5%; font-size: 14px">
+      <ion-label><b>ATTENDANCE</b></ion-label>
+      <ion-toggle [(ngModel)]="isToggled"></ion-toggle>
+    </ion-item>
+
+    <ion-item-sliding #item *ngFor="let schedule of scheduleAttendanceList ; let i = index; let odd = odd">
+      <button detail-none (click)="expandItem(schedule)" ion-item>
+        <ion-grid>
+          <h6>
+            <ion-row ion-text>
+              <ion-col col-3 text-center>
+                <div *ngIf="odd" class="numberCircle-odd">
+                  {{ i+1 }}
+                </div>
+                <div *ngIf="!odd" class="numberCircle-even">
+                  {{ i+1 }}
+                </div>
+
+                <!--img src="{{'assets/imgs/number/' + (i+1) + '.png'}}" style="width:50px; height:50px"-->
+              </ion-col>
+              <ion-col>
+                <ion-row ion-text [color]="odd ? 'tone1' : 'tone2'" style="padding-bottom: 3px;">
+                  <h3>&nbsp;
+                    <ion-icon name="calendar"></ion-icon> : {{schedule.date | date:'dd-MM-yyyy'}}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <ion-icon name="clock"></ion-icon> : {{schedule.date | date:'HH:mm'}}
+                  </h3>
+                </ion-row>
+                <ion-row ion-text color="gray" style="padding-bottom: 3px;">
+                  <h4>&nbsp;
+                    &nbsp;<b>!</b>&nbsp;
+                    เวลาสาย : {{schedule.lateTime | date:'HH:mm'}}
+                    &nbsp;|&nbsp;
+                    คะแนนสาย : {{schedule.lateScore}}
+                  </h4>
+                </ion-row>
+                <ion-row style="padding-bottom: 3px;">
+                  <h6 ion-text color='success'>&nbsp;
+                    <b>
+                      <ion-icon name="checkmark"></ion-icon>
+                    </b> มาเรียน : {{schedule.countOnTime+schedule.countLate+schedule.countLeave}}
+                  </h6>&nbsp;&nbsp;
+                  <h6 ion-text color='danger2'>
+                    <b>
+                      <ion-icon name="close"></ion-icon>
+                    </b> ขาดเรียน : {{schedule.countOnTime+schedule.countLate+schedule.countLeave}}
+                  </h6>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </h6>
+        </ion-grid>
+        <expandable [expandHeight]="itemExpandHeight" [expanded]="schedule.expanded">
+          <ion-grid>
+            <h6>
+              <ion-row ion-text text-center>
+                <ion-col ion-text color='primary'>
+                  <ion-icon name="people"></ion-icon><br>กลุ่ม
+                </ion-col>
+                <ion-col ion-text color='success'>
+                  <ion-icon name="happy"></ion-icon><br>ตรงเวลา
+                </ion-col>
+                <ion-col ion-text color='b-create'>
+                  <ion-icon name="sad"></ion-icon><br>สาย
+                </ion-col>
+                <ion-col ion-text color='warning'>
+                  <ion-icon name="medkit"></ion-icon><br>ลา
+                </ion-col>
+                <ion-col ion-text color='danger2'>
+                  <ion-icon name="close"></ion-icon><br>ขาด
+                </ion-col>
+              </ion-row>
+              <div *ngFor="let g of groupList">
+                <ion-row ion-text text-center>
+                  <ion-col ion-text color='primary'>{{g.gid}}</ion-col>
+                  <ion-col ion-text color='success'>{{g.countOnTime}}</ion-col>
+                  <ion-col ion-text color='b-create'>{{g.countLate}}</ion-col>
+                  <ion-col ion-text color='warning'>{{g.countLeave}}</ion-col>
+                  <ion-col ion-text color='danger2'>{{g.countMissed}}/{{g.all}}</ion-col>
+                </ion-row>
+              </div>
+            </h6>
+          </ion-grid>
+        </expandable>
+      </button>
+      <ion-item-options side="right">
+        <button ion-button color="primary" (click)="onClick_UpdateAttendanceLeave(schedule.id, schedule)">
+          <ion-icon name="medkit" style="font-size: 25px"></ion-icon>
+          Leave/Sick
+        </button>
+        <button ion-button color="secondary" (click)="onClick_UpdateAttendance(schedule.id, schedule)">
+          <ion-icon name="qr-scanner" style="font-size: 25px"></ion-icon>
+          SCAN REPEAT
+        </button>
+      </ion-item-options>
+      <ion-item-options side="left">
+        <button ion-button color="danger" (click)="onClick_Delete(schedule.id)">
+          <ion-icon name="trash" style="font-size: 25px"></ion-icon>
+          Delete
+        </button>
+        <button ion-button color="gray" (click)="onClick_Setting(schedule.id,schedule)">
+          <ion-icon name="settings" style="font-size: 25px"></ion-icon>
+          Setting
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+
+
+    <!--ion-item-sliding *ngFor="let item of scheduleAttendanceList ; let i = index; let odd = odd">
+      <button detail-none (click)="expandItem(item)" ion-item>
+        <ion-row>
+          <ion-thumbnail item-start>
+            <img src="{{'assets/imgs/number/' + (i+1) + '.png'}}">
+          </ion-thumbnail>
+          <div>
+            <div style="font-size: 30px" ion-text [color]="odd ? 'tone1' : 'tone2'">
+              <ion-row>
+                <ion-col>
+                  <h3>
+                    <ion-icon name="calendar"></ion-icon> : {{item.date | date:'dd-MM-yyyy'}}
+                  </h3>
+                </ion-col>
+                <ion-col>
+                  <h3>
+                    <ion-icon name="clock"></ion-icon> : {{item.date | date:'HH:mm'}}
+                  </h3>
+                </ion-col>
+              </ion-row>
+            </div>
+            <p>เวลาสาย : {{item.lateTime | date:'HH:mm'}} | คะแนนสาย : {{item.lateScore}}</p>
+            <ion-row>
+              <ion-col>
+                <h6 ion-text color='success'>
+                  <b>
+                    <ion-icon name="checkmark"></ion-icon>
+                  </b> มาเรียน : {{item.countOnTime+item.countLate+item.countLeave}} </h6>
+              </ion-col>
+              <ion-col>
+                <h6 ion-text color='danger2'>
+                  <b>
+                    <ion-icon name="close"></ion-icon>
+                  </b> ขาดเรียน : {{item.countMiss}} </h6>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-row>
+        <expandable [expandHeight]="itemExpandHeight" [expanded]="item.expanded">
+          <ion-grid>
+            <h6>
+              <ion-row ion-text text-center>
+                <ion-col ion-text color='primary'>
+                  <ion-icon name="people"></ion-icon><br>กลุ่ม
+                </ion-col>
+                <ion-col ion-text color='success'>
+                  <ion-icon name="happy"></ion-icon><br>ตรงเวลา
+                </ion-col>
+                <ion-col ion-text color='b-create'>
+                  <ion-icon name="sad"></ion-icon><br>สาย
+                </ion-col>
+                <ion-col ion-text color='warning'>
+                  <ion-icon name="medkit"></ion-icon><br>ลา
+                </ion-col>
+                <ion-col ion-text color='danger2'>
+                  <ion-icon name="close"></ion-icon><br>ขาด
+                </ion-col>
+              </ion-row>
+              <div ion-text [color]="odd ? 'tone1' : 'tone2'" *ngFor="let g of groupList">
+                <ion-row ion-text text-center>
+                  <ion-col ion-text color='primary'>{{g.gid}}</ion-col>
+                  <ion-col ion-text color='success'>{{g.countOnTime}}</ion-col>
+                  <ion-col ion-text color='b-create'>{{g.countLate}}</ion-col>
+                  <ion-col ion-text color='warning'>{{g.countLeave}}</ion-col>
+                  <ion-col ion-text color='danger2'>{{g.countMissed}}/{{g.all}}</ion-col>
+                </ion-row>
+              </div>
+            </h6>
+          </ion-grid>
+        </expandable>
+      </button>
+      <ion-item-options side="right">
+        <button ion-button color="primary" (click)="onClick_UpdateAttendanceLeave(item.id, item)">
+          <ion-icon name="medkit" style="font-size: 25px"></ion-icon>
+          Leave/Sick
+        </button>
+        <button ion-button color="secondary" (click)="onClick_UpdateAttendance(item.id, item)">
+          <ion-icon name="qr-scanner" style="font-size: 25px"></ion-icon>
+          SCAN REPEAT
+        </button>
+      </ion-item-options>
+
+      <ion-item-options side="left">
+        <button ion-button color="danger" (click)="onClick_Delete(item.id)">
+          <ion-icon name="trash" style="font-size: 25px"></ion-icon>
+          Delete
+        </button>
+        <button ion-button color="gray" (click)="onClick_Setting(item.id,item)">
+          <ion-icon name="settings" style="font-size: 25px"></ion-icon>
+          Setting
+        </button>
+      </ion-item-options>
+    </ion-item-sliding-->
+  </ion-list>
+
+  <!--///////////////////////////////////////////////////////-->
+
+  <ion-list *ngIf="isToggled==true">
+    <ion-item style="padding-top: 5%; font-size: 14px">
+      <ion-label><b>ATTENDANCE</b></ion-label>
+      <ion-toggle [(ngModel)]="isToggled"></ion-toggle>
+    </ion-item>
+    <ion-item-sliding #item *ngFor="let schedule of scheduleAttendanceList.slice().reverse() ; let i = index; let odd = odd">
+      <button detail-none (click)="expandItem(schedule)" ion-item>
+        <ion-grid>
+          <h6>
+            <ion-row ion-text>
+              <ion-col col-3 text-center>
+                <div *ngIf="odd" class="numberCircle-odd">
+                  {{ (scheduleAttendanceList.length-i) }}
+                </div>
+                <div *ngIf="!odd" class="numberCircle-even">
+                  {{ (scheduleAttendanceList.length-i) }}
+                </div>
+                <!--img src="{{'assets/imgs/number/' + (scheduleAttendanceList.length-i) + '.png'}}" style="width:50px; height:50px"-->
+              </ion-col>
+              <ion-col>
+                <ion-row ion-text [color]="odd ? 'tone1' : 'tone2'" style="padding-bottom: 3px;">
+                  <h3>&nbsp;
+                    <ion-icon name="calendar"></ion-icon> : {{schedule.date | date:'dd-MM-yyyy'}}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <ion-icon name="clock"></ion-icon> : {{schedule.date | date:'HH:mm'}}
+                  </h3>
+                </ion-row>
+                <ion-row ion-text color="gray" style="padding-bottom: 3px;">
+                  <h4>&nbsp;
+                    &nbsp;<b>!</b>&nbsp;
+                    เวลาสาย : {{schedule.lateTime | date:'HH:mm'}}
+                    &nbsp;|&nbsp;
+                    คะแนนสาย : {{schedule.lateScore}}
+                  </h4>
+                </ion-row>
+                <ion-row style="padding-bottom: 3px;">
+                  <h6 ion-text color='success'>&nbsp;
+                    <b>
+                      <ion-icon name="checkmark"></ion-icon>
+                    </b> มาเรียน : {{schedule.countOnTime+schedule.countLate+schedule.countLeave}}
+                  </h6>&nbsp;&nbsp;
+                  <h6 ion-text color='danger2'>
+                    <b>
+                      <ion-icon name="close"></ion-icon>
+                    </b> ขาดเรียน : {{schedule.countOnTime+schedule.countLate+schedule.countLeave}}
+                  </h6>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+          </h6>
+        </ion-grid>
+        <expandable [expandHeight]="itemExpandHeight" [expanded]="schedule.expanded">
+          <ion-grid>
+            <h6>
+              <ion-row ion-text text-center>
+                <ion-col ion-text color='primary'>
+                  <ion-icon name="people"></ion-icon><br>กลุ่ม
+                </ion-col>
+                <ion-col ion-text color='success'>
+                  <ion-icon name="happy"></ion-icon><br>ตรงเวลา
+                </ion-col>
+                <ion-col ion-text color='b-create'>
+                  <ion-icon name="sad"></ion-icon><br>สาย
+                </ion-col>
+                <ion-col ion-text color='warning'>
+                  <ion-icon name="medkit"></ion-icon><br>ลา
+                </ion-col>
+                <ion-col ion-text color='danger2'>
+                  <ion-icon name="close"></ion-icon><br>ขาด
+                </ion-col>
+              </ion-row>
+              <div *ngFor="let g of groupList">
+                <ion-row ion-text text-center>
+                  <ion-col ion-text color='primary'>{{g.gid}}</ion-col>
+                  <ion-col ion-text color='success'>{{g.countOnTime}}</ion-col>
+                  <ion-col ion-text color='b-create'>{{g.countLate}}</ion-col>
+                  <ion-col ion-text color='warning'>{{g.countLeave}}</ion-col>
+                  <ion-col ion-text color='danger2'>{{g.countMissed}}/{{g.all}}</ion-col>
+                </ion-row>
+              </div>
+            </h6>
+          </ion-grid>
+        </expandable>
+      </button>
+      <ion-item-options side="right">
+        <button ion-button color="primary" (click)="onClick_UpdateAttendanceLeave(schedule.id, schedule)">
+          <ion-icon name="medkit" style="font-size: 25px"></ion-icon>
+          Leave/Sick
+        </button>
+        <button ion-button color="secondary" (click)="onClick_UpdateAttendance(schedule.id, schedule)">
+          <ion-icon name="qr-scanner" style="font-size: 25px"></ion-icon>
+          SCAN REPEAT
+        </button>
+      </ion-item-options>
+      <ion-item-options side="left">
+        <button ion-button color="danger" (click)="onClick_Delete(schedule.id)">
+          <ion-icon name="trash" style="font-size: 25px"></ion-icon>
+          Delete
+        </button>
+        <button ion-button color="gray" (click)="onClick_Setting(schedule.id,schedule)">
+          <ion-icon name="settings" style="font-size: 25px"></ion-icon>
+          Setting
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+
+
+
+
+    <!--ion-item-sliding *ngFor="let item of scheduleAttendanceList.slice().reverse() ; let i = index; let odd = odd">
+      <button detail-none (click)="expandItem(item)" ion-item>
+        <ion-row>
+          <ion-thumbnail item-start>
+            <img src="{{'assets/imgs/number/' + (scheduleAttendanceList.length-i) + '.png'}}">
+          </ion-thumbnail>
+          <div>
+            <div style="font-size: 30px" ion-text [color]="odd ? 'tone1' : 'tone2'">
+              <ion-row>
+                <ion-col>
+                  <h3>
+                    <ion-icon name="calendar"></ion-icon> : {{item.date | date:'dd-MM-yyyy'}}
+                  </h3>
+                </ion-col>
+                <ion-col>
+                  <h3>
+                    <ion-icon name="clock"></ion-icon> : {{item.date | date:'HH:mm'}}
+                  </h3>
+                </ion-col>
+              </ion-row>
+            </div>
+            <p>เวลาสาย : {{item.lateTime | date:'HH:mm'}} | คะแนนสาย : {{item.lateScore}}</p>
+            <ion-row>
+              <ion-col>
+                <h6 ion-text color='success'>
+                  <b>
+                    <ion-icon name="checkmark"></ion-icon>
+                  </b> มาเรียน : {{item.countOnTime+item.countLate+item.countLeave}} </h6>
+              </ion-col>
+              <ion-col>
+                <h6 ion-text color='danger2'>
+                  <b>
+                    <ion-icon name="close"></ion-icon>
+                  </b> ขาดเรียน : {{item.countMiss}} </h6>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-row>
+        <expandable [expandHeight]="itemExpandHeight" [expanded]="item.expanded">
+          <ion-grid>
+            <h6>
+              <ion-row ion-text text-center>
+                <ion-col ion-text color='primary'>
+                  <ion-icon name="people"></ion-icon><br>กลุ่ม
+                </ion-col>
+                <ion-col ion-text color='success'>
+                  <ion-icon name="happy"></ion-icon><br>ตรงเวลา
+                </ion-col>
+                <ion-col ion-text color='b-create'>
+                  <ion-icon name="sad"></ion-icon><br>สาย
+                </ion-col>
+                <ion-col ion-text color='warning'>
+                  <ion-icon name="medkit"></ion-icon><br>ลา
+                </ion-col>
+                <ion-col ion-text color='danger2'>
+                  <ion-icon name="close"></ion-icon><br>ขาด
+                </ion-col>
+              </ion-row>
+              <div ion-text [color]="odd ? 'tone1' : 'tone2'" *ngFor="let g of groupList">
+                <ion-row ion-text text-center>
+                  <ion-col ion-text color='primary'>{{g.gid}}</ion-col>
+                  <ion-col ion-text color='success'>{{g.countOnTime}}</ion-col>
+                  <ion-col ion-text color='b-create'>{{g.countLate}}</ion-col>
+                  <ion-col ion-text color='warning'>{{g.countLeave}}</ion-col>
+                  <ion-col ion-text color='danger2'>{{g.countMissed}}/{{g.all}}</ion-col>
+                </ion-row>
+              </div>
+            </h6>
+          </ion-grid>
+        </expandable>
+      </button>
+      <ion-item-options side="right">
+        <button ion-button color="primary" (click)="onClick_UpdateAttendanceLeave(item.id, item)">
+          <ion-icon name="medkit" style="font-size: 25px"></ion-icon>
+          Leave/Sick
+        </button>
+        <button ion-button color="secondary" (click)="onClick_UpdateAttendance(item.id, item)">
+          <ion-icon name="qr-scanner" style="font-size: 25px"></ion-icon>
+          SCAN REPEAT
+        </button>
+      </ion-item-options>
+
+      <ion-item-options side="left">
+        <button ion-button color="danger" (click)="onClick_Delete(item.id)">
+          <ion-icon name="trash" style="font-size: 25px"></ion-icon>
+          Delete
+        </button>
+        <button ion-button color="gray" (click)="onClick_Setting(item.id,item)">
+          <ion-icon name="settings" style="font-size: 25px"></ion-icon>
+          Setting
+        </button>
+      </ion-item-options>
+    </ion-item-sliding-->
+  </ion-list>
+
+
+</ion-content>

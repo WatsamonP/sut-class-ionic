@@ -5,11 +5,58 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
-    <ion-list>
-      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
-        {{p.title}}
+
+  <ion-content class="bg-slide-menu">
+    <ion-list no-lines>
+      <ion-item class="bg-slide-menu">
+        <ion-avatar item-start>
+          <div class="numberCircle" ion-text color="light"><b>{{ firstChar(userData.firstName) | uppercase }}</b></div>
+          <!--ion-icon name="contact" style="font-size: 50px" ion-text color="primary"></ion-icon-->
+          <!--ion-text-avatar>{{userData.avatar}}</ion-text-avatar-->
+        </ion-avatar>
+        <div ion-text color="light">{{userData.username}}</div>
+        <div style="font-size:14px" ion-text color="light-gray">
+          {{userData.firstName}} {{userData.lastName}}<br>
+        </div>
+      </ion-item>
+
+      <button ion-text color="light" menuClose ion-item (click)="openPage(pages[0])" class="bg-slide-menu">
+        <ion-avatar item-start style="padding-left: 3px">
+          <div class="numberCircle-item-home">
+            <ion-icon ios="ios-home" md="ios-home"></ion-icon>
+          </div>
+        </ion-avatar>
+        {{pages[0].title}}
       </button>
+
+      <button ion-text color="light" menuClose ion-item (click)="openPage(pages[1])" class="bg-slide-menu">
+        <ion-avatar item-start style="padding-left: 3px">
+          <div class="numberCircle-item-about">
+            <ion-icon ios="ios-person" md="ios-person" person></ion-icon>
+          </div>
+        </ion-avatar>
+        {{pages[1].title}}
+      </button>
+
+      <button ion-text color="light" menuClose ion-item (click)="openPage(pages[2])" class="bg-slide-menu">
+        
+        <ion-avatar item-start style="padding-left: 3px">
+          <div class="numberCircle-item-out" >
+              
+            <ion-icon ios="md-log-out" md="md-log-out"></ion-icon>
+          </div>
+        </ion-avatar>
+        {{pages[2].title}}
+      </button>
+
+      <!--button ion-text color="light" menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" class="bg-slide-menu">
+        <ion-avatar item-start>
+          <div class="numberCircle-item-home">
+            <ion-icon name="{{p.icon}}"></ion-icon>
+          </div>
+        </ion-avatar>
+        {{p.title}}
+      </button-->
     </ion-list>
   </ion-content>
 

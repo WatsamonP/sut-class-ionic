@@ -1,0 +1,80 @@
+page-attendance {
+  .bg-img{ 
+    position: absolute;
+    bottom: 0%;
+    width: 100%;
+    background-color: rgba($color: rgb(0, 0, 0), $alpha: 0.7);
+  }
+
+  .backgound-image {
+    position: absolute;
+    background-image: url('assets/imgs/course/0.png');
+    //top: 15%;
+    //font-size: 2.0em;
+    //width: 100%;
+    //font-weight: bold;
+    //color: #000000;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+
+  .bg{
+    background: #f3f3f3;
+  }
+  .button-create-new {
+    background-color: #fd7c31;
+  }
+}
+
+
+.ios, .md {
+  page-home {
+      button {
+          align-items: baseline;
+      }
+  }
+
+
+  .col img {
+    max-height: 100%;
+    max-width: 100%;
+    display: block;
+    margin: auto;
+  }
+
+  .numberCircle-even {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    /* remove if you don't care about IE8 */
+    width: 45px;
+    height: 45px;
+    padding: 8px;
+    background: #488aff;
+    //border: 2px solid #666;
+    color: #ffffff;
+    text-align: center;
+    font: 25px Arial, sans-serif;
+    margin: auto;
+    font-weight: bold;
+    //text-shadow: 2px 2px #ffffff
+  }
+
+  .numberCircle-odd {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    /* remove if you don't care about IE8 */
+    width: 45px;
+    height: 45px;
+    padding: 8px;
+    background: #ffb400;
+    //border: 2px solid #666;
+    color: #ffffff;
+    text-align: center;
+    font: 25px Arial, sans-serif;
+    margin: auto;
+    font-weight: bold;
+    //text-shadow: 2px 2px #ffffff
+  }
+}

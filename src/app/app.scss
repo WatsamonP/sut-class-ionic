@@ -14,3 +14,61 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+.bg-slide-menu{
+  background-color: rgb(56, 56, 56);
+}
+
+.text-light{
+  color: #FFFFFF;
+}
+
+.numberCircle {
+  border-radius: 50%;
+  behavior: url(PIE.htc);
+  /* remove if you don't care about IE8 */
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  background: #666;
+  //border: 2px solid #666;
+  color: #fff;
+  text-align: center;
+  font: 22px Arial, sans-serif;
+}
+
+.numberCircle-item-home {
+  border-radius: 50%;
+  behavior: url(PIE.htc);
+  /* remove if you don't care about IE8 */
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  background: rgb(93, 104, 255);
+  text-align: center;
+  font-size:18px;
+}
+
+.numberCircle-item-about {
+  border-radius: 50%;
+  behavior: url(PIE.htc);
+  /* remove if you don't care about IE8 */
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  background: #ffb400;
+  text-align: center;
+  font-size:18px;
+}
+
+.numberCircle-item-out {
+  border-radius: 50%;
+  behavior: url(PIE.htc);
+  /* remove if you don't care about IE8 */
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  background: #f53d3d;
+  text-align: center;
+  font-size:18px;
+}

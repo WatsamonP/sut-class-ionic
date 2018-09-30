@@ -1,0 +1,40 @@
+page-quiz {
+  .bg{
+    background: #f3f3f3;
+  }
+
+  .numberCircle-even {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    /* remove if you don't care about IE8 */
+    width: 45px;
+    height: 45px;
+    padding: 8px;
+    background: #488aff;
+    //border: 2px solid #666;
+    color: #ffffff;
+    text-align: center;
+    font: 25px Arial, sans-serif;
+    margin: auto;
+    font-weight: bold;
+    //text-shadow: 2px 2px #ffffff
+  }
+
+  .numberCircle-odd {
+    border-radius: 50%;
+    behavior: url(PIE.htc);
+    /* remove if you don't care about IE8 */
+    width: 45px;
+    height: 45px;
+    padding: 8px;
+    background: #ffb400;
+    //border: 2px solid #666;
+    color: #ffffff;
+    text-align: center;
+    font: 25px Arial, sans-serif;
+    margin: auto;
+    font-weight: bold;
+    //text-shadow: 2px 2px #ffffff
+  }
+}
+
