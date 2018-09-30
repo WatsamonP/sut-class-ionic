@@ -1,23 +1,24 @@
-var express  = require('express');
-var app      = express();                               
-var morgan = require('morgan');            
-var bodyParser = require('body-parser');    
-var cors = require('cors');
- 
-app.use(morgan('dev'));                                        
-app.use(bodyParser.urlencoded({'extended':'true'}));            
-app.use(bodyParser.json());                                     
-app.use(cors());
- 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header('Access-Control-Allow-Methods', 'DELETE, PUT');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+let express = require('express'),
+    path = require('path');
+var app = express();
+let server = require('http').Server(app);
+
+app.use(express.static(path.join(__dirname)));
+
+app.get('/', function(req, res, next){
+    res.sendStatus(200);
 });
- 
-app.use(express.static('www'));
-app.set('port', process.env.PORT || 5000);
-app.listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'));
+
+app.get('/blog.html', function(req, res,next){
+    res.sendFile(path.join(__dirname+"/blog.html"));
+});
+
+app.post('/contact', function(req, res, next){
+
+});
+
+const port = process.env.PORT || 8000;
+
+server.listen(port, () => {
+  console.log("App is running on port " + port);
 });
