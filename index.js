@@ -21,3 +21,10 @@ app.set('port', process.env.PORT || 5000);
 app.listen(app.get('port'), function () {
   console.log('Express server listening on port ' + app.get('port'));
 });
+/*
+let server = require('http').Server(app);
+const port = process.env.PORT || 8000;
+server.listen(port, () => {
+    console.log("App is running on port " + port);
+});
+*/
