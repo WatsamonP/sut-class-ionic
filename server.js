@@ -23,4 +23,4 @@ server.listen(port, () => {
   console.log("App is running on port " + port);
 });
 
-server.listen(process.env.PORT || port)
+//server.listen(process.env.PORT || port)
