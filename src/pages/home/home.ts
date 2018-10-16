@@ -26,6 +26,7 @@ export class HomePage {
   foundCourse: boolean = false;
   eventList: any;
   selectedEvent: any;
+  isLoading:boolean = true;
 
   constructor(
     public navCtrl: NavController,
@@ -39,7 +40,9 @@ export class HomePage {
     this.eventList = [];
     this.selectedEvent = [];
     const path = `users/${this.auth.currentUserId()}/course/`;
+    
     this.db.list(path).snapshotChanges().map(actions => {
+      this.isLoading = false;
       return actions.map(action => ({ key: action.key, ...action.payload.val() }));
     }).subscribe(items => {
       if (items.length !== 0) {

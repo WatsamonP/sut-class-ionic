@@ -22,6 +22,7 @@ export class QuizModalPage {
   quiz_id: String;
   activity: { id: '', name: '' };
   totalScore: Number;
+  totalScoreList: any = [];
   //Model & List
   studentList: any;
   scheduleQuizList: any;
@@ -80,6 +81,15 @@ export class QuizModalPage {
       this.scoreRangeArr.push(temp);
       temp = temp - 1;
     }
+
+    this.totalScoreList = []
+    let num = Number(this.totalScore);
+    for (var i = Number(this.totalScore); i >= Number(1); i--) {
+      this.totalScoreList.push(num);
+      num = num - 1;
+    }
+
+
   }
 
   ionViewDidLoad() {
@@ -224,6 +234,21 @@ export class QuizModalPage {
       this.closeModal();
     });
     scan.present();
+  }
+
+  public selectScore(score) {
+    this.scoreSelect = Number(score);
+
+    if (this.status == '0') {
+      console.log('toCreate');
+      this.createNewQuiz();
+    } else if (this.status == '1') {
+      console.log('toRepeat' + this.quiz_id);
+      this.pushToScanPage(this.quiz_id);
+    } else if (this.status == '2') {
+      console.log('toRepeatString' + this.quiz_id);
+      this.pushToScanPageString(this.quiz_id);
+    }
   }
 
 }

@@ -146,7 +146,11 @@
       </button>
 
       <ion-item-options side="right">
-        <button ion-button color="secondary" (click)="onClick_ScanRepeat(schedule.id, schedule)">
+        <button ion-button color="primary" (click)="onClick_ScanRepeat2(schedule.id, schedule)">
+          <ion-icon name="keypad" style="font-size: 25px"></ion-icon>
+          Enter <br>Student ID
+        </button>
+        <button ion-button color="secondary" (click)="onClick_ScanRepeat1(schedule.id, schedule)">
           <ion-icon name="qr-scanner" style="font-size: 25px"></ion-icon>
           SCAN REPEAT
         </button>

@@ -7,54 +7,64 @@
   </ion-navbar>
 </ion-header>
 
+
+
 <ion-content class="bg">
   <!--button ion-button icon-only (click)="presentPopover($event)">
     <ion-icon name="more"></ion-icon>
   </button-->
 
-  <div *ngIf="foundCourse == false" ion-text class="text-center">
-    <ion-icon name="alert" style="font-size:50px" ion-text color="danger"></ion-icon>
-    <h5 ion-text color="danger">
-      ไม่พบรายวิชา
-    </h5>
-    <div>
-      สามารถสร้างรายวิชาใหม่ได้ที่ <br>
-      https://sut-classroom.firebaseapp.com
+  <div *ngIf="isLoading" class="text-center">
+    <img class="loading" src="assets/imgs/scannerApp_3.png" width="180px">
+    <img src="assets/imgs/scannerApp_2.png" width="180px" style="padding-top:30%">
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div *ngIf="!foundCourse" ion-text class="text-center">
+      <ion-icon name="alert" style="font-size:50px" ion-text color="danger"></ion-icon>
+      <br><br>
+      <h5 ion-text color="danger">
+        ไม่พบรายวิชา
+      </h5>
+      <div>
+        สามารถสร้างรายวิชาใหม่ได้ที่ <br>
+        https://sut-classroom.firebaseapp.com
+      </div>
     </div>
 
-  </div>
-  <div *ngIf="foundCourse">
-    <div *ngFor="let item of courseList; let i = index">
-      <ion-card style="border-radius: 8px 8px 8px 8px">
-        <div *ngIf="item.img!='pic'" (click)="showRadio(item.id,item.name,item.img,i,item.groupNo)" style="height: 150px"
-          [style.backgroundColor]="item.img">
-          <div class="card-title">{{item.id}}</div>
-          <div class="card-subtitle"><button ion-button round small color="st-light">{{item.name}}</button></div>
-        </div>
-        <div *ngIf="item.img=='pic'" (click)="showRadio(item.id,item.name,item.img,i,item.groupNo)" style="height: 150px"
-          [style.backgroundColor]="item.img">
-          <img src="{{'assets/imgs/course/' + i + '.png'}}">
-          <div class="card-title">{{item.id}}</div>
-          <div class="card-subtitle"><button ion-button round small color="st-light">{{item.name}}</button></div>
-        </div>
+    <div *ngIf="foundCourse">
+      <div *ngFor="let item of courseList; let i = index">
+        <ion-card style="border-radius: 8px 8px 8px 8px">
+          <div *ngIf="item.img!='pic'" (click)="showRadio(item.id,item.name,item.img,i,item.groupNo)" style="height: 150px"
+            [style.backgroundColor]="item.img">
+            <div class="card-title">{{item.id}}</div>
+            <div class="card-subtitle"><button ion-button round small color="st-light">{{item.name}}</button></div>
+          </div>
+          <div *ngIf="item.img=='pic'" (click)="showRadio(item.id,item.name,item.img,i,item.groupNo)" style="height: 150px"
+            [style.backgroundColor]="item.img">
+            <img src="{{'assets/imgs/course/' + i + '.png'}}">
+            <div class="card-title">{{item.id}}</div>
+            <div class="card-subtitle"><button ion-button round small color="st-light">{{item.name}}</button></div>
+          </div>
 
-        <div class="card-button">
-          <ion-row>
-            <ion-col style="text-align: center">
-              <button ion-button icon-left clear small color="light" (click)="showRadio(item.id,item.name,item.img,i,item.groupNo)">
-                <ion-icon ios="ios-options" md="ios-options"></ion-icon>
-                <div>OPTION</div>
-              </button>
-            </ion-col>
-            <ion-col *ngIf="courseList[i].eventList.attendance !== undefined" style="text-align: center">
-              <button ion-button icon-left clear small color="light" (click)="selectedCourse(item.id,item.name,i,item.groupNo)">
-                <ion-icon ios="ios-add-circle-outline" md="ios-add-circle-outline"></ion-icon>
-                <div>เช็คชื่อเข้าเรียน</div>
-              </button>
-            </ion-col>
-          </ion-row>
-        </div>
-      </ion-card>
+          <div class="card-button">
+            <ion-row>
+              <ion-col style="text-align: center">
+                <button ion-button icon-left clear small color="light" (click)="showRadio(item.id,item.name,item.img,i,item.groupNo)">
+                  <ion-icon ios="ios-options" md="ios-options"></ion-icon>
+                  <div>OPTION</div>
+                </button>
+              </ion-col>
+              <ion-col *ngIf="courseList[i].eventList.attendance !== undefined" style="text-align: center">
+                <button ion-button icon-left clear small color="light" (click)="selectedCourse(item.id,item.name,i,item.groupNo)">
+                  <ion-icon ios="ios-add-circle-outline" md="ios-add-circle-outline"></ion-icon>
+                  <div>เช็คชื่อเข้าเรียน</div>
+                </button>
+              </ion-col>
+            </ion-row>
+          </div>
+        </ion-card>
+      </div>
     </div>
   </div>
 </ion-content>

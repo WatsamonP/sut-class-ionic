@@ -111,13 +111,16 @@ export class QuizPage {
       countZero = 0;countCheck = 0;all = 0;
       for(var j=0; j<this.studentList.length ;j++){
         if(this.studentList[j].group == i){
+          let activityKey = String(this.activity.id);
+          temp = this.studentList[j][activityKey][item.id].score;
+          /*
           if(String(this.activity.id) == 'quiz'){
             temp = this.studentList[j].quiz[item.id].score;
           }else if(String(this.activity.id) == 'hw'){
             temp = this.studentList[j].hw[item.id].score;
           }else if(String(this.activity.id) == 'lab'){
             temp = this.studentList[j].lab[item.id].score;
-          }
+          }*/
           all++;
           console.log();
           
@@ -201,14 +204,14 @@ export class QuizPage {
     this.pushToScanPage(this.dataList);
   }
 
-  public onClick_ScanRepeat(id, item){
+  public onClick_ScanRepeat1(id, item){
     console.log(item.totalScore);
     let alert = this.alertCtrl.create();
-    alert.setTitle('Option');
-    alert.addInput({ type: 'radio',label: 'สแกนเป็นชุด',value: '0',checked: false});
-    alert.addInput({ type: 'radio',label: 'สแกนรายบุคคล',value: '1',checked: false});
-    alert.addInput({ type: 'radio',label: 'ป้อนรหัสนักศึกษา(ชุด)',value: '2',checked: false});
-    alert.addInput({ type: 'radio',label: 'ป้อนรหัสนักศึกษา(รายบุคคล)',value: '3',checked: false});
+    alert.setTitle('รายการ');
+    alert.addInput({ type: 'radio',label: 'สแกนเป็น ชุด',value: '0',checked: false});
+    alert.addInput({ type: 'radio',label: 'สแกน รายบุคคล',value: '1',checked: false});
+    //alert.addInput({ type: 'radio',label: 'ป้อนรหัสนักศึกษา(ชุด)',value: '2',checked: false});
+    //alert.addInput({ type: 'radio',label: 'ป้อนรหัสนักศึกษา(รายบุคคล)',value: '3',checked: false});
     alert.addButton('Cancel');
     alert.addButton({
       text: 'OK',
@@ -217,7 +220,23 @@ export class QuizPage {
           this.onClick_ScanUpdateSet(id,item.totalScore);
         }else if(data == '1'){
           this.onClick_ScanUpdatePerson(id,item.totalScore);
-        }else if(data == '2'){
+        }
+      }
+    });
+    alert.present();
+  }
+
+  public onClick_ScanRepeat2(id, item){
+    console.log(item.totalScore);
+    let alert = this.alertCtrl.create();
+    alert.setTitle('รายการ');
+    alert.addInput({ type: 'radio',label: 'ป้อนรหัสนักศึกษา (ชุด)',value: '2',checked: false});
+    alert.addInput({ type: 'radio',label: 'ป้อนรหัสนักศึกษา (รายบุคคล)',value: '3',checked: false});
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {
+        if(data == '2'){
           this.onClick_StringUpdateSet(id,item.totalScore);
         }else if(data == '3'){
           this.onClick_StringUpdatePerson(id,item.totalScore);

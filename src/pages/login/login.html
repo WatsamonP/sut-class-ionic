@@ -1,24 +1,55 @@
-<ion-content>
+<ion-content padding class="bg-black">
   <br><br>
   <div class="center">
-    <img src="assets/imgs/logoApp.png" width="160px" />
+    <img src="assets/imgs/scannerApp_2.png" width="180px" />
 
-    <div class="my-block">
-	    <form [formGroup]="loginForm" (ngSubmit)="login()">
-        <ion-item>
-          <ion-label color="primary" floating>EMAIL</ion-label>
-          <ion-input type="text" formControlName="email"></ion-input>
+    <div style="padding:10px"></div>
+
+    <div>
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+        <!--ion-label color="light" stacked>
+          <h6>E-mail</h6>
+        </ion-label-->
+        <ion-list inset class="input-box">
+          <ion-item ion-text color="primary">
+            <span item-left>
+              <ion-icon name="person"></ion-icon>
+            </span>
+            <ion-input type="text" formControlName="email" placeholder="E-mail"></ion-input>
+          </ion-item>
+        </ion-list>
+
+        <ion-list inset class="input-box">
+          <ion-item ion-text color="primary">
+            <span item-left>
+              <ion-icon name="lock"></ion-icon>
+            </span>
+            <ion-input type="password" formControlName="password" placeholder="Password"></ion-input>
+          </ion-item>
+        </ion-list>
+
+
+        <!--ion-item no-lines>
+          <ion-label color="light" stacked>
+            <h6>E-mail</h6>
+          </ion-label>
+          <ion-input type="text" formControlName="email" class="input-box"></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-label color="primary" floating>Password</ion-label>
-          <ion-input type="password" formControlName="password"></ion-input>
-        </ion-item>
-        
+        <ion-item no-lines padding-top>
+          <ion-label color="light" stacked>
+            <h6>Password</h6>
+          </ion-label>
+          <ion-input type="password" formControlName="password" class="input-box"></ion-input>
+        </ion-item-->
+
         <br><br>
-        
-        <button ion-button color="primary" block type="submit" [disabled]="!loginForm.valid">Sign In</button>
+
+        <div padding>
+          <button ion-button color="orange" block type="submit" [disabled]="!loginForm.valid">Sign In</button>
+        </div>
       </form>
 
     </div>
-  </div>  
+  </div>
 </ion-content>

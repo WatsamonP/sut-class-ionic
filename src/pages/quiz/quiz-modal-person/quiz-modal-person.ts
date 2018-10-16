@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController, AlertController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController, AlertController } from 'ionic-angular';
 import { QuizPage } from '../quiz';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { AuthServiceProvider } from '../../../services/auth.service';
@@ -10,42 +10,42 @@ import 'rxjs/add/operator/map'
   templateUrl: 'quiz-modal-person.html',
 })
 export class QuizModalPersonPage {
-  scoreSelect : Number;
-  course_id : String;
-  quiz_id : String;
-  activity : {id: '', name: ''};
-  barcodeData : String;
-  countScan : Number;
+  scoreSelect: Number;
+  course_id: String;
+  quiz_id: String;
+  activity: { id: '', name: '' };
+  barcodeData: String;
+  countScan: Number;
   //scoreRange: Number ;
-  scoreRangeArr : any = [];
-  structure = {lower: 0, upper: 0};
-  totalScore : Number;
-  quizDataList : any;
+  scoreRangeArr: any = [];
+  structure = { lower: 0, upper: 0 };
+  totalScore: Number;
+  quizDataList: any;
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
     private auth: AuthServiceProvider,
     private db: AngularFireDatabase,
     public alertCtrl: AlertController) {
 
-      this.quizDataList = navParams.get('quizDataList');
-      this.course_id = this.quizDataList.course_id;
-      this.quiz_id = this.quizDataList.quiz_id;
-      this.barcodeData = this.quizDataList.barcodeData;
-      this.countScan = this.quizDataList.countScan;
-      this.activity = this.quizDataList.activity;
-      this.totalScore = this.quizDataList.totalScore;
-      this.structure = {lower: 1, upper: 10};
-      console.log(this.totalScore);
-      console.log(this.quizDataList);
+    this.quizDataList = navParams.get('quizDataList');
+    this.course_id = this.quizDataList.course_id;
+    this.quiz_id = this.quizDataList.quiz_id;
+    this.barcodeData = this.quizDataList.barcodeData;
+    this.countScan = this.quizDataList.countScan;
+    this.activity = this.quizDataList.activity;
+    this.totalScore = this.quizDataList.totalScore;
+    this.structure = { lower: 1, upper: 10 };
+    console.log(this.totalScore);
+    console.log(this.quizDataList);
 
-      let temp = Number(this.structure.upper);
-      for(var i=Number(this.structure.upper) ; i>=Number(this.structure.lower) ; i--){
-        this.scoreRangeArr.push(temp);
-        temp = temp-1;
-      }
+    let temp = Number(this.structure.upper);
+    for (var i = Number(this.structure.upper); i >= Number(this.structure.lower); i--) {
+      this.scoreRangeArr.push(temp);
+      temp = temp - 1;
+    }
   }
 
   ionViewDidLoad() {
@@ -55,13 +55,13 @@ export class QuizModalPersonPage {
   public update() {
     this.scoreRangeArr = [];
     let temp = Number(this.structure.upper);
-    for(var i=Number(this.structure.upper) ; i>=Number(this.structure.lower) ; i--){
+    for (var i = Number(this.structure.upper); i >= Number(this.structure.lower); i--) {
       this.scoreRangeArr.push(temp);
-      temp = temp-1;
+      temp = temp - 1;
     }
   }
 
-  public closeModal(){
+  public closeModal() {
     this.updateQuiz(this.quiz_id, this.barcodeData, this.countScan);
     this.viewCtrl.dismiss('close');
   }
@@ -69,17 +69,23 @@ export class QuizModalPersonPage {
   /////////////////////////////////////////////////////////////////////
   // ON Click Save
   /////////////////////////////////////////////////////////////////////
-  public onClickSave(){
+  public onClickSave() {
     let score = Number(this.scoreSelect);
-    if(this.scoreSelect == undefined || this.scoreSelect == null || this.scoreSelect == 0 ){
+    if (this.scoreSelect == undefined || this.scoreSelect == null || this.scoreSelect == 0) {
       this.alertErrorScore();
-    }else if(this.scoreSelect < 0){
+    } else if (this.scoreSelect < 0) {
       this.alertErrorMinusScore();
-    }else if(Number(this.scoreSelect) > Number(this.totalScore)){
+    } else if (Number(this.scoreSelect) > Number(this.totalScore)) {
       this.alertErrorTotalScore();
-    }else{
+    } else {
       this.closeModal();
     }
+  }
+
+  public selectScore(score) {
+    this.scoreSelect = Number(score);
+
+    this.closeModal();
   }
 
   /////////////////////////////////////////////////////////////////////
@@ -104,30 +110,30 @@ export class QuizModalPersonPage {
   alertErrorTotalScore() {
     let alert = this.alertCtrl.create({
       title: 'ERROR !',
-      subTitle: this.scoreSelect+'/'+this.totalScore+'<br>คะแนนที่กำหนด ห้ามมากกว่าคะแนนเต็ม',
+      subTitle: this.scoreSelect + '/' + this.totalScore + '<br>คะแนนที่กำหนด ห้ามมากกว่าคะแนนเต็ม',
       buttons: ['OK']
     });
     alert.present();
   }
 
-  updateQuiz(id, barcodeDataText, countScan){
+  updateQuiz(id, barcodeDataText, countScan) {
     let scoreNo = Number(this.scoreSelect);
-    countScan = countScan+1;
+    countScan = countScan + 1;
 
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/${this.activity.id}/${id}`)
-    .update({
-      count : countScan,
-    });
-    
+      .update({
+        count: countScan,
+      });
+
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/students/${barcodeDataText}/${this.activity.id}/${id}`)
       .update({
-        score : scoreNo,
-        date : Date(),
+        score: scoreNo,
+        date: Date(),
       });
 
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/${this.activity.id}/${id}/checked/${barcodeDataText}`)
       .set({
-        id : barcodeDataText,
-    });
+        id: barcodeDataText,
+      });
   }
 }

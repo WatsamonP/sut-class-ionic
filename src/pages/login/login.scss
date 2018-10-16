@@ -2,17 +2,22 @@ page-login {
   .center{
     text-align:center;
   }
-  .my-background-color{
-    //background-color: #222;
+  .bg-black{
+    background-color: #f3f3f3;
+    //background-image: linear-gradient(rgb(175, 175, 175),rgb(223, 223, 223));
+    //
   }
+
   .item.item-input {
     background-color: transparent;
-  }
-  .item-input .label-md{
-    //color: white; //label color
-  }  
+  } 
   .my-block{
     padding-left: 10%;
     padding-right: 10%;
+  }
+  .input-box{
+    padding: 3px;
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: 5px;
   }
 }
