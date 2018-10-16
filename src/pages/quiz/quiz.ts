@@ -389,6 +389,7 @@ export class QuizPage {
       this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/students/${this.studentList[i].id}/${this.activity.id}/${dateId}`)
         .update({
           score : 0,
+          date: Date()
       });
     }
     

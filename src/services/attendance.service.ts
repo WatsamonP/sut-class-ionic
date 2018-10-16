@@ -52,6 +52,7 @@ export class AttendanceService {
         .update({
           score : 0,
           status : 'Missed Class',
+          date : Date()
       });
     }
   }
