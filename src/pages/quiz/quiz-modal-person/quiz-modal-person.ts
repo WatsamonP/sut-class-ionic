@@ -20,6 +20,7 @@ export class QuizModalPersonPage {
   scoreRangeArr: any = [];
   structure = { lower: 0, upper: 0 };
   totalScore: Number;
+  totalScoreList: any = [];
   quizDataList: any;
 
   constructor(
@@ -45,6 +46,13 @@ export class QuizModalPersonPage {
     for (var i = Number(this.structure.upper); i >= Number(this.structure.lower); i--) {
       this.scoreRangeArr.push(temp);
       temp = temp - 1;
+    }
+
+    this.totalScoreList = []
+    let num = Number(this.totalScore);
+    for (var i = Number(this.totalScore); i >= Number(1); i--) {
+      this.totalScoreList.push(num);
+      num = num - 1;
     }
   }
 
