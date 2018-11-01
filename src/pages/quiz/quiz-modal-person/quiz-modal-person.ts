@@ -143,5 +143,12 @@ export class QuizModalPersonPage {
       .set({
         id: barcodeDataText,
       });
+    // บอกว่ามีอัพเดท 
+    this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/eventList/${this.activity.id}`).update({
+      isUpdate: true
+    })
+    this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/eventList/score`).update({
+      isUpdate: true
+    })
   }
 }

@@ -14,23 +14,23 @@ import 'rxjs/add/operator/map'
   templateUrl: 'scan-modal.html',
 })
 export class ScanModalPage {
-  course_id : String;
-  activity : any;
-  studentList : any;
+  course_id: String;
+  activity: any;
+  studentList: any;
   // Attendance
-  scheduleAttendanceList : any;
-  attendanceData : any;
-  attendance_status : String;
-  attendance_score : Number;
-  dataList : any;
-  lateTime : any;
-  lateScore : any;
-  onTimeScore : any;
-  leaveScore : any;
-  leaveActivity : any;
+  scheduleAttendanceList: any;
+  attendanceData: any;
+  attendance_status: String;
+  attendance_score: Number;
+  dataList: any;
+  lateTime: any;
+  lateScore: any;
+  onTimeScore: any;
+  leaveScore: any;
+  leaveActivity: any;
   scanRepeatActivity: any;
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     private barcodeScanner: BarcodeScanner,
     public viewCtrl: ViewController,
@@ -39,97 +39,97 @@ export class ScanModalPage {
     private auth: AuthServiceProvider,
     private db: AngularFireDatabase) {
 
-      this.activity = navParams.get('activity');
-      this.course_id = navParams.get('course_id');
-      this.attendanceData = navParams.get('attendanceData');
-      this.leaveActivity = navParams.get('leaveActivity');
-      this.scanRepeatActivity = navParams.get('scanRepeatActivity');
-      this.lateTime = this.attendanceData.lateTime;
-      this.lateScore = this.attendanceData.lateScore;
-      this.onTimeScore = this.attendanceData.onTimeScore;
-      this.leaveScore = this.attendanceData.leaveScore;
-      
-      this.attendance_status = '';
-      this.attendance_score = null;
+    this.activity = navParams.get('activity');
+    this.course_id = navParams.get('course_id');
+    this.attendanceData = navParams.get('attendanceData');
+    this.leaveActivity = navParams.get('leaveActivity');
+    this.scanRepeatActivity = navParams.get('scanRepeatActivity');
+    this.lateTime = this.attendanceData.lateTime;
+    this.lateScore = this.attendanceData.lateScore;
+    this.onTimeScore = this.attendanceData.onTimeScore;
+    this.leaveScore = this.attendanceData.leaveScore;
 
-      const coursePath = `users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/attendance`;
-      const studentPath = `users/${this.auth.currentUserId()}/course/${this.course_id}/students`;
+    this.attendance_status = '';
+    this.attendance_score = null;
 
-      this.db.list(studentPath).snapshotChanges().map(actions => {
-        return actions.map(action => ({ key: action.key, ...action.payload.val() }));
-        }).subscribe(items => {
-          this.studentList = items;
-          return items.map(item => item.key);
-      });
+    const coursePath = `users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/attendance`;
+    const studentPath = `users/${this.auth.currentUserId()}/course/${this.course_id}/students`;
 
-      this.db.list(coursePath).snapshotChanges().map(actions => {
-        return actions.map(action => ({ key: action.key, ...action.payload.val() }));
-        }).subscribe(items => {
-          this.scheduleAttendanceList = items;
-          return items.map(item => item.key);
-      });
+    this.db.list(studentPath).snapshotChanges().map(actions => {
+      return actions.map(action => ({ key: action.key, ...action.payload.val() }));
+    }).subscribe(items => {
+      this.studentList = items;
+      return items.map(item => item.key);
+    });
 
-      if(this.leaveActivity == 'scan'){
-        this.attendance_status = 'Leave';
-        this.scanAttendance(this.attendanceData.id)
-      }else if(this.leaveActivity == 'string'){
-        this.doCreateLeaveString(this.attendanceData.id);
-      }else if(this.scanRepeatActivity == 'scan'){
-        this.scanAttendance(this.attendanceData.id)
-      }else if(this.scanRepeatActivity == 'string'){
-        this.doCreateRepeatString(this.attendanceData.id);
-      }else if(this.leaveActivity == 'none' && this.scanRepeatActivity == 'none'){
-        this.scanAttendance(this.attendanceData.id)
-      }
+    this.db.list(coursePath).snapshotChanges().map(actions => {
+      return actions.map(action => ({ key: action.key, ...action.payload.val() }));
+    }).subscribe(items => {
+      this.scheduleAttendanceList = items;
+      return items.map(item => item.key);
+    });
+
+    if (this.leaveActivity == 'scan') {
+      this.attendance_status = 'Leave';
+      this.scanAttendance(this.attendanceData.id)
+    } else if (this.leaveActivity == 'string') {
+      this.doCreateLeaveString(this.attendanceData.id);
+    } else if (this.scanRepeatActivity == 'scan') {
+      this.scanAttendance(this.attendanceData.id)
+    } else if (this.scanRepeatActivity == 'string') {
+      this.doCreateRepeatString(this.attendanceData.id);
+    } else if (this.leaveActivity == 'none' && this.scanRepeatActivity == 'none') {
+      this.scanAttendance(this.attendanceData.id)
+    }
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ScanModalPage');
   }
 
-  public closeModal(){
+  public closeModal() {
     this.viewCtrl.dismiss('close');
   }
 
   public scanOption = {
-    showTorchButton : true,
-    prompt : "ให้ตำแหน่งของ barcode อยู่ภายในพื้นที่ scan",
+    showTorchButton: true,
+    prompt: "ให้ตำแหน่งของ barcode อยู่ภายในพื้นที่ scan",
     disableSuccessBeep: false,
-    resultDisplayDuration : 1500,
-    orientation : "portrait",
+    resultDisplayDuration: 1500,
+    orientation: "portrait",
   };
 
   public scanAttendance(id) {
     this.barcodeScanner.scan(this.scanOption).then((barcodeData) => {
       if (!barcodeData.cancelled) {
 
-        let stdFlag = this.checkStudentClass(barcodeData.text,id);
-        if(stdFlag){
-          this.checkAttendance(barcodeData.text,id);
+        let stdFlag = this.checkStudentClass(barcodeData.text, id);
+        if (stdFlag) {
+          this.checkAttendance(barcodeData.text, id);
           //this.scanAttendance(id);
-        }else{
+        } else {
           this.errorStudentFlag(id);
         }
-        
-      }else{
+
+      } else {
         this.viewCtrl.dismiss('close');
         return false;
       }
 
 
-    },(err) => {
+    }, (err) => {
       console.log(err);
     });
   }
 
   //////////////////////////////////////////////////////////////////////
-  checkStudentClass(barcodeDataText,id){
+  checkStudentClass(barcodeDataText, id) {
     let studentFlag = false;
-    for(var i=0 ; i<this.studentList.length ; i++){
-      if(barcodeDataText == this.studentList[i].id){
+    for (var i = 0; i < this.studentList.length; i++) {
+      if (barcodeDataText == this.studentList[i].id) {
         studentFlag = true;
         break;
-      }else{
+      } else {
         studentFlag = false;
         continue;
       }
@@ -137,90 +137,98 @@ export class ScanModalPage {
     return studentFlag;
   }
 
-  checkAttendance(barcodeDataText, id){
+  checkAttendance(barcodeDataText, id) {
 
-    if(this.attendance_status == 'Leave'){
+    if (this.attendance_status == 'Leave') {
       this.attendance_score = this.leaveScore;
-    }else{
+    } else {
       this.calculateTime();
     }
-    let countLate, countMiss, countOnTime ,countLeave;
+    let countLate, countMiss, countOnTime, countLeave;
 
     ///////////////////////////////////////
-    for(var i=0 ; i<this.scheduleAttendanceList.length ; i++){
-      if(id == this.scheduleAttendanceList[i].key){
+    for (var i = 0; i < this.scheduleAttendanceList.length; i++) {
+      if (id == this.scheduleAttendanceList[i].key) {
         countLate = this.scheduleAttendanceList[i].countLate;
         countMiss = this.scheduleAttendanceList[i].countMiss;
         countOnTime = this.scheduleAttendanceList[i].countOnTime;
         countLeave = this.scheduleAttendanceList[i].countLeave;
 
-        if(this.scheduleAttendanceList[i].checked != undefined){
-          if(barcodeDataText in this.scheduleAttendanceList[i].checked){
+        if (this.scheduleAttendanceList[i].checked != undefined) {
+          if (barcodeDataText in this.scheduleAttendanceList[i].checked) {
             console.log('duplicate');
             this.errorDuplicateData(id, barcodeDataText);
-          }else{
-            this.updateAttendance(id,countLate,countMiss,countOnTime,countLeave,barcodeDataText);
+          } else {
+            this.updateAttendance(id, countLate, countMiss, countOnTime, countLeave, barcodeDataText);
           }
-        }else{
-          this.updateAttendance(id,countLate,countMiss,countOnTime,countLeave,barcodeDataText);
+        } else {
+          this.updateAttendance(id, countLate, countMiss, countOnTime, countLeave, barcodeDataText);
         }
       }
     }
   }
 
-  updateAttendance(id,countLate,countMiss,countOnTime,countLeave, barcodeDataText){
+  updateAttendance(id, countLate, countMiss, countOnTime, countLeave, barcodeDataText) {
     let scoreNo = Number(this.attendance_score);
-    if(this.attendance_status=='Late'){
-      countLate = countLate+1;
-      countMiss = countMiss-1;
-    }else if(this.attendance_status=='onTime'){
-      countOnTime = countOnTime+1;
-      countMiss = countMiss-1;
-    }else if(this.attendance_status=='Leave'){
-      countLeave = countLeave+1;
-      countMiss = countMiss-1;
+    if (this.attendance_status == 'Late') {
+      countLate = countLate + 1;
+      countMiss = countMiss - 1;
+    } else if (this.attendance_status == 'onTime') {
+      countOnTime = countOnTime + 1;
+      countMiss = countMiss - 1;
+    } else if (this.attendance_status == 'Leave') {
+      countLeave = countLeave + 1;
+      countMiss = countMiss - 1;
     }
 
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/attendance/${id}`)
-    .update({
-      countLate : countLate,
-      countMiss : countMiss,
-      countOnTime : countOnTime,
-      countLeave : countLeave,
-    });
+      .update({
+        countLate: countLate,
+        countMiss: countMiss,
+        countOnTime: countOnTime,
+        countLeave: countLeave,
+      });
 
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/students/${barcodeDataText}/attendance/${id}`)
       .update({
-        score : scoreNo,
-        date : Date(),
-        status : this.attendance_status,
+        score: scoreNo,
+        date: Date(),
+        status: this.attendance_status,
       });
 
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/attendance/${id}/checked/${barcodeDataText}`)
       .set({
-        id : barcodeDataText,
-    });
+        id: barcodeDataText,
+      });
+    // บอกว่ามีอัพเดท 
+    this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/eventList/attendance`).update({
+      isUpdate: true
+    })
+    this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/eventList/score`).update({
+      isUpdate: true
+    })
+
     /////////////////////////////////
-    
-    if(this.leaveActivity == 'string'){
+
+    if (this.leaveActivity == 'string') {
       this.doCreateLeaveString(id);
-    }else if(this.leaveActivity == 'scan'){
+    } else if (this.leaveActivity == 'scan') {
       this.attendance_status = 'Leave';
       this.scanAttendance(id);
-    }else if(this.scanRepeatActivity == 'string'){
+    } else if (this.scanRepeatActivity == 'string') {
       this.doCreateRepeatString(id);
-    }else{
+    } else {
       this.scanAttendance(id);
     }
   }
 
-  calculateTime(){
+  calculateTime() {
     let currentDay = moment().format();
-    if(currentDay > moment(this.lateTime).format()){
+    if (currentDay > moment(this.lateTime).format()) {
       console.log('Late');
       this.attendance_status = 'Late';
       this.attendance_score = this.lateScore;
-    }else{
+    } else {
       console.log('Ontime');
       this.attendance_status = 'onTime';
       this.attendance_score = this.onTimeScore;
@@ -235,7 +243,7 @@ export class ScanModalPage {
         {
           name: 'stdId',
           placeholder: 'รหัสนักศึกษา',
-          type : 'text',
+          type: 'text',
         },
       ],
       buttons: [
@@ -249,15 +257,15 @@ export class ScanModalPage {
         {
           text: 'Save',
           handler: data => {
-            if(Number(this.leaveScore) > Number(this.onTimeScore)){
+            if (Number(this.leaveScore) > Number(this.onTimeScore)) {
               this.errorScoreAlertLeave();
-            }else{
+            } else {
               this.attendance_status = 'Leave';
-              let stdFlag = this.checkStudentClass(data.stdId,id);
-              if(stdFlag){
-                this.checkAttendance(data.stdId,id); 
+              let stdFlag = this.checkStudentClass(data.stdId, id);
+              if (stdFlag) {
+                this.checkAttendance(data.stdId, id);
                 //this.closeModal();
-              }else{
+              } else {
                 this.errorStudentFlag(id);
               }
             }
@@ -276,7 +284,7 @@ export class ScanModalPage {
         {
           name: 'stdId',
           placeholder: 'รหัสนักศึกษา',
-          type : 'text',
+          type: 'text',
         },
       ],
       buttons: [
@@ -290,14 +298,14 @@ export class ScanModalPage {
         {
           text: 'Save',
           handler: data => {
-            if(Number(this.leaveScore) > Number(this.onTimeScore)){
+            if (Number(this.leaveScore) > Number(this.onTimeScore)) {
               this.errorScoreAlertLeave();
-            }else{
-              let stdFlag = this.checkStudentClass(data.stdId,id);
-              if(stdFlag){
-                this.checkAttendance(data.stdId,id); 
+            } else {
+              let stdFlag = this.checkStudentClass(data.stdId, id);
+              if (stdFlag) {
+                this.checkAttendance(data.stdId, id);
                 //this.closeModal();
-              }else{
+              } else {
                 this.errorStudentFlag(id);
               }
             }
@@ -320,7 +328,7 @@ export class ScanModalPage {
 
 
   ////////////////////////////////////////////////
-  
+
   errorStudentFlag(id) {
     let alert = this.alertCtrl.create({
       title: 'ERROR !',
@@ -328,17 +336,18 @@ export class ScanModalPage {
       buttons: [{
         text: 'OK',
         handler: () => {
-          if(this.leaveActivity == 'string'){
+          if (this.leaveActivity == 'string') {
             this.doCreateLeaveString(id);
-          }else if(this.leaveActivity == 'scan'){
+          } else if (this.leaveActivity == 'scan') {
             this.attendance_status = 'Leave';
             this.scanAttendance(id);
-          }else if(this.scanRepeatActivity == 'string'){
+          } else if (this.scanRepeatActivity == 'string') {
             this.doCreateRepeatString(id);
-          }else{
+          } else {
             this.scanAttendance(id);
           }
-        }}
+        }
+      }
       ]
     });
     alert.present();
@@ -351,22 +360,23 @@ export class ScanModalPage {
       buttons: [{
         text: 'OK',
         handler: () => {
-          if(this.leaveActivity == 'string'){
+          if (this.leaveActivity == 'string') {
             this.doCreateLeaveString(id);
-          }else if(this.leaveActivity == 'scan'){
+          } else if (this.leaveActivity == 'scan') {
             this.attendance_status = 'Leave';
             this.scanAttendance(id);
-          }else if(this.scanRepeatActivity == 'string'){
+          } else if (this.scanRepeatActivity == 'string') {
             this.doCreateRepeatString(id);
-          }else{
+          } else {
             this.scanAttendance(id);
           }
           //this.scanAttendance(id);
-        }}
+        }
+      }
       ]
     });
     alert.present();
   }
-  
+
 
 }

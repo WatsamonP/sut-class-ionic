@@ -15,25 +15,25 @@ import { QuizModalPersonPage } from '../quiz-modal-person/quiz-modal-person';
   templateUrl: 'scan-quiz.html',
 })
 export class ScanQuizPage {
-  course_id : String;
-  activity : any;
-  dataList : any;
-  quiz_id : any;
+  course_id: String;
+  activity: any;
+  dataList: any;
+  quiz_id: any;
   //Model & List
-  studentList : any;
-  courseList : any;
-  scheduleQuizList : any;
-  studentDataList : any;
+  studentList: any;
+  courseList: any;
+  scheduleQuizList: any;
+  studentDataList: any;
   // Val
-  studentCount : any;
+  studentCount: any;
   isToggled: boolean = false;
-  totalScore : Number;
-  quizDataList : any;
-  scoreSelect : Number;
-  scanKey : String;
+  totalScore: Number;
+  quizDataList: any;
+  scoreSelect: Number;
+  scanKey: String;
 
   constructor(
-    public navCtrl: NavController, 
+    public navCtrl: NavController,
     public navParams: NavParams,
     private barcodeScanner: BarcodeScanner,
     public viewCtrl: ViewController,
@@ -43,106 +43,106 @@ export class ScanQuizPage {
     private db: AngularFireDatabase,
     public modalCtrl: ModalController) {
 
-      this.dataList = {};
-      this.scanKey = '';
-      this.activity = navParams.get('activity');
-      this.course_id = navParams.get('course_id');
-      this.dataList = navParams.get('dataList');
-      this.quiz_id = this.dataList.quiz_id;
-      this.totalScore = this.dataList.totalScore;
-      this.scoreSelect = this.dataList.scoreSelect;
-      this.scanKey = this.dataList.key;
-      this.quizDataList = {};
-      this.scheduleQuizList = [];
-      this.studentDataList = [];
-      console.log(this.dataList);
-      console.log(this.scanKey)
+    this.dataList = {};
+    this.scanKey = '';
+    this.activity = navParams.get('activity');
+    this.course_id = navParams.get('course_id');
+    this.dataList = navParams.get('dataList');
+    this.quiz_id = this.dataList.quiz_id;
+    this.totalScore = this.dataList.totalScore;
+    this.scoreSelect = this.dataList.scoreSelect;
+    this.scanKey = this.dataList.key;
+    this.quizDataList = {};
+    this.scheduleQuizList = [];
+    this.studentDataList = [];
+    console.log(this.dataList);
+    console.log(this.scanKey)
 
-      const coursePath = `users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/${this.activity.id}`;
-      const studentPath = `users/${this.auth.currentUserId()}/course/${this.course_id}/students`;
+    const coursePath = `users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/${this.activity.id}`;
+    const studentPath = `users/${this.auth.currentUserId()}/course/${this.course_id}/students`;
 
-      //Query scheduleQuizList
-      this.db.list(coursePath).snapshotChanges().map(actions => {
-        return actions.map(action => ({ key: action.key, ...action.payload.val() }));
-          }).subscribe(items => {
-        this.scheduleQuizList = items;
-        console.log(this.scheduleQuizList);
-        return items.map(item => item.key);
-      });
+    //Query scheduleQuizList
+    this.db.list(coursePath).snapshotChanges().map(actions => {
+      return actions.map(action => ({ key: action.key, ...action.payload.val() }));
+    }).subscribe(items => {
+      this.scheduleQuizList = items;
+      console.log(this.scheduleQuizList);
+      return items.map(item => item.key);
+    });
 
     //Query Student
-      this.db.list(studentPath).snapshotChanges().map(actions => {
-        return actions.map(action => ({ key: action.key, ...action.payload.val() }));
-          }).subscribe(items => {
-        this.studentList = items;
-        this.studentCount = this.studentList.length;
-        console.log(this.studentList);
-          return items.map(item => item.key);
-      });
+    this.db.list(studentPath).snapshotChanges().map(actions => {
+      return actions.map(action => ({ key: action.key, ...action.payload.val() }));
+    }).subscribe(items => {
+      this.studentList = items;
+      this.studentCount = this.studentList.length;
+      console.log(this.studentList);
+      return items.map(item => item.key);
+    });
 
-      if(this.scanKey == 'person'){
-        this.scanPerson(this.quiz_id);
-      }else if(this.scanKey== 'set'){
-        this.scanSet(this.quiz_id);
-      }else if(this.scanKey == 'stringSet'){
-        this.doCreateRepeatStringSet(this.quiz_id);
-      }else if(this.scanKey == 'stringPerson'){
-        this.doCreateRepeatString(this.quiz_id);
-      }else{
-        console.log('error');
-      }
+    if (this.scanKey == 'person') {
+      this.scanPerson(this.quiz_id);
+    } else if (this.scanKey == 'set') {
+      this.scanSet(this.quiz_id);
+    } else if (this.scanKey == 'stringSet') {
+      this.doCreateRepeatStringSet(this.quiz_id);
+    } else if (this.scanKey == 'stringPerson') {
+      this.doCreateRepeatString(this.quiz_id);
+    } else {
+      console.log('error');
+    }
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ScanQuizPage');
   }
 
-  public closeModal(){
+  public closeModal() {
     //this.checkQuiz('B5800018',this.quiz_id)
     this.viewCtrl.dismiss('close');
   }
 
   public scanOption = {
-    showTorchButton : true,
-    prompt : "ให้ตำแหน่งของ barcode อยู่ภายในพื้นที่ scan",
+    showTorchButton: true,
+    prompt: "ให้ตำแหน่งของ barcode อยู่ภายในพื้นที่ scan",
     disableSuccessBeep: false,
-    resultDisplayDuration : 1500,
-    orientation : "portrait",
+    resultDisplayDuration: 1500,
+    orientation: "portrait",
   };
 
-  public scanPerson(id){
-    console.log('scanPerson'+id);
+  public scanPerson(id) {
+    console.log('scanPerson' + id);
     this.barcodeScanner.scan(this.scanOption).then((barcodeData) => {
       if (!barcodeData.cancelled) {
-        let stdFlag = this.checkStudentClass(barcodeData.text,id);
-        if(stdFlag){
-          this.checkQuizPerson(barcodeData.text,id); 
-        }else{
+        let stdFlag = this.checkStudentClass(barcodeData.text, id);
+        if (stdFlag) {
+          this.checkQuizPerson(barcodeData.text, id);
+        } else {
           this.errorStudentFlag(id);
         }
-      }else{
+      } else {
         this.viewCtrl.dismiss('close');
         return false;
       }
-    },(err) => {
+    }, (err) => {
       console.log(err);
     });
   }
 
-  public scanSet(id){
+  public scanSet(id) {
     this.barcodeScanner.scan(this.scanOption).then((barcodeData) => {
       if (!barcodeData.cancelled) {
-        let stdFlag = this.checkStudentClass(barcodeData.text,id);
-        if(stdFlag){
-          this.checkQuizSet(barcodeData.text,id); 
-        }else{
+        let stdFlag = this.checkStudentClass(barcodeData.text, id);
+        if (stdFlag) {
+          this.checkQuizSet(barcodeData.text, id);
+        } else {
           this.errorStudentFlag(id);
         }
-      }else{
+      } else {
         this.viewCtrl.dismiss('close');
         return false;
       }
-    },(err) => {
+    }, (err) => {
       console.log(err);
     });
   }
@@ -155,7 +155,7 @@ export class ScanQuizPage {
         {
           name: 'stdId',
           placeholder: 'รหัสนักศึกษา',
-          type : 'text',
+          type: 'text',
         },
       ],
       buttons: [
@@ -169,11 +169,11 @@ export class ScanQuizPage {
         {
           text: 'Save',
           handler: data => {
-            let stdFlag = this.checkStudentClass(data.stdId,id);
-            if(stdFlag){
-              this.checkQuizSet(data.stdId,id); 
+            let stdFlag = this.checkStudentClass(data.stdId, id);
+            if (stdFlag) {
+              this.checkQuizSet(data.stdId, id);
               //this.closeModal();
-            }else{
+            } else {
               this.errorStudentFlag(id);
             }
           }
@@ -191,7 +191,7 @@ export class ScanQuizPage {
         {
           name: 'stdId',
           placeholder: 'รหัสนักศึกษา',
-          type : 'text',
+          type: 'text',
         },
       ],
       buttons: [
@@ -205,11 +205,11 @@ export class ScanQuizPage {
         {
           text: 'Save',
           handler: data => {
-            let stdFlag = this.checkStudentClass(data.stdId,id);
-            if(stdFlag){
-              this.checkQuizPerson(data.stdId,id); 
+            let stdFlag = this.checkStudentClass(data.stdId, id);
+            if (stdFlag) {
+              this.checkQuizPerson(data.stdId, id);
               //this.closeModal();
-            }else{
+            } else {
               this.errorStudentFlag(id);
             }
           }
@@ -219,14 +219,14 @@ export class ScanQuizPage {
     prompt.present();
   }
 
-  checkStudentClass(barcodeDataText,id){
+  checkStudentClass(barcodeDataText, id) {
     let studentFlag = false;
-    
-    for(var i=0 ; i<this.studentList.length ; i++){
-      if(barcodeDataText == this.studentList[i].id){
+
+    for (var i = 0; i < this.studentList.length; i++) {
+      if (barcodeDataText == this.studentList[i].id) {
         studentFlag = true;
         break;
-      }else{
+      } else {
         studentFlag = false;
         continue;
       }
@@ -234,78 +234,78 @@ export class ScanQuizPage {
     return studentFlag;
   }
 
-  checkQuizSet(barcodeDataText, quiz_id){
+  checkQuizSet(barcodeDataText, quiz_id) {
     let countScan;
-    for(var i=0 ; i<this.scheduleQuizList.length ; i++){
+    for (var i = 0; i < this.scheduleQuizList.length; i++) {
       console.log(this.scheduleQuizList);
       console.log('Here');
-      if(quiz_id == this.scheduleQuizList[i].key){
+      if (quiz_id == this.scheduleQuizList[i].key) {
         console.log('Here2');
         countScan = this.scheduleQuizList[i].count;
-        if(this.scheduleQuizList[i].checked != undefined){
-          if(barcodeDataText in this.scheduleQuizList[i].checked){
+        if (this.scheduleQuizList[i].checked != undefined) {
+          if (barcodeDataText in this.scheduleQuizList[i].checked) {
             console.log('duplicate');
             this.confirmUpdateScore(barcodeDataText, quiz_id, countScan);
-          }else{
+          } else {
             console.log('scan');
             //if(this.scanKey == 'person'){
             //  this.insertScoreModal(barcodeDataText, quiz_id,countScan)
             //}else if(this.scanKey == 'set'){
-              this.updateQuiz(quiz_id, barcodeDataText, countScan);
-              if(this.scanKey == 'stringSet'){
-                this.doCreateRepeatStringSet(quiz_id)
-              }else{
-                this.scanSet(quiz_id);
-              }
+            this.updateQuiz(quiz_id, barcodeDataText, countScan);
+            if (this.scanKey == 'stringSet') {
+              this.doCreateRepeatStringSet(quiz_id)
+            } else {
+              this.scanSet(quiz_id);
+            }
             //}
           }
-        }else{
+        } else {
           console.log('scan');
           //if(this.scanKey == 'person'){
           //  this.insertScoreModal(barcodeDataText, quiz_id,countScan)
           //}else if(this.scanKey == 'set'){
-            //console.log('update '+ this.dataList.key)
-            this.updateQuiz(quiz_id, barcodeDataText, countScan);
-            if(this.scanKey == 'stringSet'){
-              this.doCreateRepeatStringSet(quiz_id)
-            }else{
-              this.scanSet(quiz_id);
-            }
+          //console.log('update '+ this.dataList.key)
+          this.updateQuiz(quiz_id, barcodeDataText, countScan);
+          if (this.scanKey == 'stringSet') {
+            this.doCreateRepeatStringSet(quiz_id)
+          } else {
+            this.scanSet(quiz_id);
+          }
           //}
         }
       }
     }
   }
 
-  checkQuizPerson(barcodeDataText, quiz_id){
+  checkQuizPerson(barcodeDataText, quiz_id) {
     let countScan;
-    for(var i=0 ; i<this.scheduleQuizList.length ; i++){
+    for (var i = 0; i < this.scheduleQuizList.length; i++) {
       console.log(this.scheduleQuizList);
       console.log('Here');
-      if(quiz_id == this.scheduleQuizList[i].key){
+      if (quiz_id == this.scheduleQuizList[i].key) {
         console.log('Here2');
         countScan = this.scheduleQuizList[i].count;
-        if(this.scheduleQuizList[i].checked != undefined){
-          if(barcodeDataText in this.scheduleQuizList[i].checked){
+        if (this.scheduleQuizList[i].checked != undefined) {
+          if (barcodeDataText in this.scheduleQuizList[i].checked) {
             console.log('duplicate');
             this.confirmUpdateScore(barcodeDataText, quiz_id, countScan);
-          }else{
+          } else {
             console.log('scan');
             //if(this.scanKey == 'person'){
-              this.insertScoreModal(barcodeDataText, quiz_id,countScan)
+            this.insertScoreModal(barcodeDataText, quiz_id, countScan)
             //}else if(this.scanKey == 'set'){
             //  this.updateQuiz(quiz_id, barcodeDataText, countScan);
             //  this.scanSet(quiz_id);
             //}
           }
-        }else{
+        } else {
           console.log('scan');
           //if(this.scanKey == 'person'){
-            this.insertScoreModal(barcodeDataText, quiz_id,countScan)
+          this.insertScoreModal(barcodeDataText, quiz_id, countScan)
           //}else if(this.scanKey == 'set'){
-            //console.log('update '+ this.dataList.key)
-            //this.updateQuiz(quiz_id, barcodeDataText, countScan);
-            //this.scanSet(quiz_id);
+          //console.log('update '+ this.dataList.key)
+          //this.updateQuiz(quiz_id, barcodeDataText, countScan);
+          //this.scanSet(quiz_id);
           //}
         }
       }
@@ -319,24 +319,25 @@ export class ScanQuizPage {
       buttons: [{
         text: 'OK',
         handler: () => {
-          if(this.scanKey == 'person'){
+          if (this.scanKey == 'person') {
             this.scanPerson(id);
-          }else if(this.scanKey == 'set'){
+          } else if (this.scanKey == 'set') {
             this.scanSet(id)
-          }else if(this.scanKey == 'stringPerson'){
+          } else if (this.scanKey == 'stringPerson') {
             this.doCreateRepeatString(id);
-          }else if(this.scanKey == 'stringSet'){
+          } else if (this.scanKey == 'stringSet') {
             this.doCreateRepeatStringSet(id);
           }
-        }}
+        }
+      }
       ]
     });
     alert.present();
   }
 
-  confirmUpdateScore(barcodeDataText,id, countScan) {
+  confirmUpdateScore(barcodeDataText, id, countScan) {
     let alert = this.alertCtrl.create({
-      title: "มีคะแนน "+this.activity.name+" ของนักศึกษาคนนี้แล้ว",
+      title: "มีคะแนน " + this.activity.name + " ของนักศึกษาคนนี้แล้ว",
       message: 'ต้องการอัพเดทข้อมูลหรือไม่ ?',
       buttons: [
         {
@@ -344,13 +345,13 @@ export class ScanQuizPage {
           role: 'cancel',
           handler: () => {
             console.log('Cancel clicked');
-            if(this.scanKey == 'person'){
+            if (this.scanKey == 'person') {
               this.scanPerson(id);
-            }else if(this.scanKey == 'set'){
+            } else if (this.scanKey == 'set') {
               this.scanSet(id)
-            }else if(this.scanKey == 'stringPerson'){
+            } else if (this.scanKey == 'stringPerson') {
               this.closeModal();
-            }else if(this.scanKey == 'stringSet'){
+            } else if (this.scanKey == 'stringSet') {
               this.doCreateRepeatStringSet(id);
             }
           }
@@ -359,16 +360,16 @@ export class ScanQuizPage {
           text: 'Update',
           handler: () => {
             console.log('Update clicked');
-            if(this.scanKey == 'person'){
+            if (this.scanKey == 'person') {
               //this.scanPerson(id);
-              this.insertScoreModal(barcodeDataText, id, countScan-1);
-            }else if(this.scanKey == 'set'){
-              this.updateQuiz(id, barcodeDataText, countScan-1);
+              this.insertScoreModal(barcodeDataText, id, countScan - 1);
+            } else if (this.scanKey == 'set') {
+              this.updateQuiz(id, barcodeDataText, countScan - 1);
               this.scanSet(id);
-            }else if(this.scanKey == 'stringPerson'){
-              this.insertScoreModal(barcodeDataText, id, countScan-1);
-            }else if(this.scanKey == 'stringSet'){
-              this.updateQuiz(id, barcodeDataText, countScan-1);
+            } else if (this.scanKey == 'stringPerson') {
+              this.insertScoreModal(barcodeDataText, id, countScan - 1);
+            } else if (this.scanKey == 'stringSet') {
+              this.updateQuiz(id, barcodeDataText, countScan - 1);
               this.doCreateRepeatStringSet(id);
             }
           }
@@ -378,54 +379,62 @@ export class ScanQuizPage {
     alert.present();
   }
 
-  insertScoreModal(barcodeData, quiz_id, countScan){
+  insertScoreModal(barcodeData, quiz_id, countScan) {
     console.log('insertScoreModal');
-    this.quizDataList = 
-      { course_id : this.course_id,
+    this.quizDataList =
+      {
+        course_id: this.course_id,
         quiz_id: quiz_id,
         barcodeData: barcodeData,
-        countScan : countScan,
-        activity : this.activity,
+        countScan: countScan,
+        activity: this.activity,
         totalScore: this.totalScore
       };
-    console.log(this.quizDataList); 
-    let profileModal = this.modalCtrl.create(QuizModalPersonPage, { 
-      quizDataList: this.quizDataList 
+    console.log(this.quizDataList);
+    let profileModal = this.modalCtrl.create(QuizModalPersonPage, {
+      quizDataList: this.quizDataList
     });
     profileModal.onDidDismiss(data => {
-      if(this.scanKey == 'stringPerson'){
+      if (this.scanKey == 'stringPerson') {
         this.doCreateRepeatString(quiz_id);
         //this.closeModal();
-      }else{
+      } else {
         this.scanPerson(quiz_id);
       }
     });
     profileModal.present();
   }
 
-  updateQuiz(id, barcodeDataText, countScan){
+  updateQuiz(id, barcodeDataText, countScan) {
     let scoreNo = Number(this.scoreSelect);
-    countScan = countScan+1;
+    countScan = countScan + 1;
 
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/${this.activity.id}/${id}`)
-    .update({
-      count : countScan,
-    });
-    
+      .update({
+        count: countScan,
+      });
+
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/students/${barcodeDataText}/${this.activity.id}/${id}`)
       .update({
-        score : scoreNo,
-        date : Date(),
+        score: scoreNo,
+        date: Date(),
       });
 
     this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/schedule/${this.activity.id}/${id}/checked/${barcodeDataText}`)
       .set({
-        id : barcodeDataText,
-    });
+        id: barcodeDataText,
+      });
+    // บอกว่ามีอัพเดท 
+    this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/eventList/${this.activity.id}`).update({
+      isUpdate: true
+    })
+    this.db.object(`users/${this.auth.currentUserId()}/course/${this.course_id}/eventList/score`).update({
+      isUpdate: true
+    })
 
   }
-  
-  
+
+
 
 
 }
