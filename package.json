@@ -44,7 +44,7 @@
     "firebase": "^5.5.2",
     "ionic-angular": "3.9.2",
     "ionicons": "^4.4.4",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "morgan": "^1.9.1",
     "phonegap-plugin-barcodescanner": "^8.0.0",
     "promise-polyfill": "^8.1.0",
